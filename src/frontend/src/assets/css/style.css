@@ -1,14 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700,200');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+
 body {
   font-family: Arial, sans-serif;
-  background: #f5f7fa;
+  background: #1A1821;
   margin: 0;
   padding: 0;
+  height:100vh;
+  max-height: 100%;
 }
 
+
 main {
-  max-width: 900px;
+  max-width: 180vh;
+  height: 100vh;
   margin: 40px auto;
   padding: 0 16px;
+  padding-top: 30px  ;
+  background: #1e1a2b;
+  border-radius: 5px;
+  margin: auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  align-items: center;
 }
 
 h1 {
@@ -25,16 +40,18 @@ label {
 textarea {
   width: 100%;
   border: 1px solid #ccc;
+  background-color: rgba(240, 248, 255, 0.8);
   border-radius: 6px;
   padding: 10px;
   font-size: 14px;
-  resize: vertical;
+  resize: none;
 }
 
 .buttons {
   display: flex;
   gap: 8px;
-  margin: 12px 0;
+  margin: 50px 0;
+  justify-content: center;
 }
 
 button {
@@ -43,27 +60,156 @@ button {
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+  color:rgba(240, 248, 255, 0.8)
 }
 
 button.process {
-  background: #4a7dff;
-  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 25px 45px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  border: none;
+  margin-right: 100px;
+  background-color: #341E7A;
 }
+button.process:hover {
+  background-color: rgba(95, 75, 187, 1);
+}
+
 
 button.cancel {
-  background: #ddd;
+   font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 25px 45px;
+  border-radius: 30px;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  border: none;
+  background-color: #2F254F;
+}
+button.cancel:hover {
+  background-color:  rgba(95, 75, 187, 1);
 }
 
+.titleref {
+  width: 100vw;               
+  max-width: 100%;  
+  box-sizing: border-box;   
+  height: 40vh;
+  padding: 0 16px;
+  justify-content: center;
+  margin-top: 0px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  background-image: url('src/assets/images/backimg.png');
+  background-repeat: no-repeat;     
+  background-position: center;      
+  background-size: cover;    
+}
+
+.titleref h1{
+  font-family: 'Oswald', sans-serif;
+  padding: 3px;
+  margin: 0;
+  font-size: 4em;
+  color:rgba(240, 248, 255, 0.8)
+}
+.titleref h3 {
+  padding: 3px;
+  margin: 0;         
+  color:rgba(240, 248, 255, 0.8)
+}
+.input-block {
+  margin-bottom: 24px;
+  text-align: center;
+}
+.input-block label {
+  margin-top: 30px;
+  margin-bottom: 40px;
+  font-family: 'Oswald', sans-serif;  
+  font-size: 1.5em;
+  color:rgba(240, 248, 255, 0.8)
+}
 .outputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 30px;
   margin-top: 24px;
 }
 
 .output-block {
-  background: white;
-  border: 1px solid #ccc;
+  background: rgb(48, 45, 59);
+  border: 1px solid #6E6485;
   border-radius: 6px;
-  padding: 12px;
+  padding: 15px;
+  text-align: center;
+  color:rgba(240, 248, 255, 0.8)
 }
+.output-block textarea {
+  margin-top: 5px;
+  padding: 0px;
+  width: 60%;  
+  background-color: rgba(240, 248, 255, 0.8);
+  resize: none;
+}
+textarea {
+  scrollbar-width: thin;       /* Firefox*/
+  scrollbar-color: #07165c #333; 
+}
+/*scroll bar changing stuff */
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #333;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #426af0; 
+  border-radius: 4px;
+}
+textarea::-webkit-scrollbar-button {
+  display: none;
+}
+
+#user-input {
+  width: 70%;
+}
+.credits {
+  width: 100vw;               
+  max-width: 100%;  
+  box-sizing: border-box;   
+  height: 20vh;
+  padding: 0 16px;
+  justify-content: center;
+  margin-top: 0px;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  background-color: #160F23;
+  color: rgba(221, 228, 235, 0.8);
+  gap:32px;
+}
+
+a {
+  color: rgba(186, 193, 201, 0.8);           
+  text-decoration: none;     
+}
+
+a:hover {
+  color: rgba(107, 127, 150, 0.8);           
+  text-decoration: none;     
+}
+
