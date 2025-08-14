@@ -1,65 +1,48 @@
-import os
-import json
-from pathlib import Path
-from flask import Flask, request, jsonify
+import os, json
+from flask import Flask, request, Response, stream_with_context, jsonify
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# --- Load .env from the project root no matter where we run from ---
-ROOT = Path(__file__).resolve().parents[2]   # .../RephraseAI/
-env_path = ROOT / ".env"
-if env_path.exists():
-    load_dotenv(env_path)
-else:
-    print(f"WARNING: .env not found at {env_path}")
-
+# Load .env next to this file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 API_KEY = os.getenv("OPENAI_API_KEY")
 if not API_KEY:
-    print("no key for api")
+    raise SystemExit("no key for api")
 
 client = OpenAI(api_key=API_KEY)
-
 app = Flask(__name__)
 
-@app.get("/api/health")
-def health():
-    return {"ok": True}
+@app.post("/api/rewrite_stream")
+def rewrite_stream():
+    body = request.get_json(force=True) or {}
+    text = (body.get("text") or "").strip()
+    if not text:
+        return jsonify({"error": "Missing 'text'"}), 400
 
-@app.post("/api/rewrite")
-def rewrite():
-    try:
-        body = request.get_json(force=True) or {}
-        text = (body.get("text") or "").strip()
-        if not text:
-            return jsonify({"error": "Missing 'text'"}), 400
+    system = (
+        "Rewrite the user's text into four distinct styles."
+        "\nReturn exactly four sections, each starting with these markers on their own line:"
+        "\n::professional\n::casual\n::polite\n::social"
+        "\nAfter each marker, continue with the rewrite as plain sentences."
+        "\nDo NOT repeat or quote the input. Do NOT wrap outputs in brackets or quotes. No extra commentary."
+    )
+    user = f'Text: \"\"\"{text}\"\"\"'
 
-        system = (
-            "Rewrite the user's text into four distinct styles: "
-            "professional, casual, polite, and social-media. "
-            "Return STRICT JSON with keys: professional, casual, polite, social. "
-            "Do not include any prose or code fences—only JSON."
-        )
-        user = f'Text: """{text}"""'
-
-        resp = client.responses.create(
+    def token_stream():
+        with client.responses.stream(
             model="gpt-4o-mini",
             input=[
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},
             ],
-            # NOTE: no response_format here for older SDKs
-        )
+        ) as stream:
+            for event in stream:
+                if getattr(event, "type", "") == "response.output_text.delta":
+                    yield event.delta  # send chunks immediately
 
-        data = json.loads(resp.output_text)
-        return jsonify({
-            "professional": data.get("professional", ""),
-            "casual":       data.get("casual", ""),
-            "polite":       data.get("polite", ""),
-            "social":       data.get("social", "")
-        })
-    except Exception as e:
-        print("OpenAI/Server error:", repr(e))
-        return jsonify({"error": f"Server error: {str(e)}"}), 500
+    return Response(stream_with_context(token_stream()),
+                    mimetype="text/plain; charset=utf-8")
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run(port=5000, debug=False)
